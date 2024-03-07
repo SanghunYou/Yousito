@@ -163,7 +163,15 @@ if (var_autom==0)
   delay(1000);
   Serial.println("PARO DE EMERGENCIA");  
   delay(1000);
-  ciclo();
+   if (var_paro1==1 && cambio1==1)
+  {
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, HIGH);
+    delay(300);
+  }
+  else
+  { 
+    cambio1=0;
   }
 }
 
