@@ -27,6 +27,7 @@ int var_infra2;
 
 int cambio1=1;
 int cambio2=1;
+int protocolo=1;
 
 void setup() {
   pinMode(in1, OUTPUT);
@@ -49,9 +50,6 @@ void setup() {
 
 void ciclo()
 {
-  digitalWrite(in1, LOW);
-  digitalWrite(in2, LOW);
-  delay(300);
   if (var_paro1==1 && cambio1==1)
   {
     digitalWrite(in1, LOW);
@@ -61,8 +59,11 @@ void ciclo()
   else
   { 
     cambio1=0;
+    cambio2=1;
+    delay(500);
     digitalWrite(in1, HIGH);
     digitalWrite(in2, LOW);
+    delay(300);
     if (var_paro2==1 && cambio2==1)
     {
     digitalWrite(in1, HIGH);
@@ -74,11 +75,41 @@ void ciclo()
     cambio2=0;
     digitalWrite(in1, LOW);
     digitalWrite(in2, HIGH);
+    delay(300);
     cambio1=1;
     }
   }
  
 
+}
+
+void alto()
+{
+  protocolo==1;
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, LOW);
+  delay(300);
+  if (protocolo==1)
+    {
+      Serial.println("OBJETO DETECTADO");
+      delay(1000);
+      Serial.println("PARO DE EMERGENCIA");  
+      delay(1000);
+      protocolo=0;
+    }
+  else if (var_paro1==1 && cambio1==1)
+    {
+      digitalWrite(in1, LOW);
+      digitalWrite(in2, HIGH);
+      delay(300);
+    }
+  else
+    { 
+      digitalWrite(in1, LOW);
+      digitalWrite(in2, LOW);
+      delay(300);
+      cambio1=0;
+    }
 }
 
 void loop() {
@@ -130,51 +161,16 @@ else
   // Modo automatico
 if (var_autom==0)
 {
-  if ((var_infra1==1)&&(var_infra2==1))
+  if (var_infra1==1)
   {
-    //Cortina medio
     ciclo();
-    //if ((var_paro1==0) && (var_paro2==1))
-    {
-    //Baja
-      //Tiempo de espera (falta)
-    //delay(1000);
-    //digitalWrite(in1, HIGH);
-    //digitalWrite(in2, LOW);
-    //delay(300);
-    }
-      //Cotina abajo
-    //else if ((var_paro1==1) && (var_paro2==0))
-    {
-    //Sube
-    //digitalWrite(in1, LOW);
-    //digitalWrite(in2, HIGH);
-    //delay(300);
-    }
-
-
   }
   else
   {
-  digitalWrite(in1, LOW);
-  digitalWrite(in2, LOW);
-  delay(300);
-  Serial.println("OBJETO DETECTADO");
-  delay(1000);
-  Serial.println("PARO DE EMERGENCIA");  
-  delay(1000);
-   if (var_paro1==1 && cambio1==1)
-  {
-    digitalWrite(in1, LOW);
-    digitalWrite(in2, HIGH);
-    delay(300);
-  }
-  else
-  { 
-    cambio1=0;
-  }
+    alto();
+  } 
 }
 
 
-
 }
+
