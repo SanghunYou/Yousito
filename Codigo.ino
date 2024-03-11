@@ -52,6 +52,7 @@ void ciclo()
 {
   if (var_paro1==1 && cambio1==1)
   {
+    //Subida
     digitalWrite(in1, LOW);
     digitalWrite(in2, HIGH);
     delay(300);
@@ -61,11 +62,13 @@ void ciclo()
     cambio1=0;
     cambio2=1;
     delay(500);
+    //Bajada
     digitalWrite(in1, HIGH);
     digitalWrite(in2, LOW);
     delay(300);
     if (var_paro2==1 && cambio2==1)
     {
+    //Subida
     digitalWrite(in1, HIGH);
     digitalWrite(in2, LOW);
     delay(300);
@@ -73,19 +76,19 @@ void ciclo()
     else
     {
     cambio2=0;
+    cambio1=1;
+    delay(500);
+    //Subida
     digitalWrite(in1, LOW);
     digitalWrite(in2, HIGH);
     delay(300);
-    cambio1=1;
     }
   }
  
-
 }
 
-void alto()
+void protocol()
 {
-  protocolo==1;
   digitalWrite(in1, LOW);
   digitalWrite(in2, LOW);
   delay(300);
@@ -96,6 +99,7 @@ void alto()
       Serial.println("PARO DE EMERGENCIA");  
       delay(1000);
       protocolo=0;
+      cambio1==1;
     }
   else if (var_paro1==1 && cambio1==1)
     {
@@ -161,13 +165,13 @@ else
   // Modo automatico
 if (var_autom==0)
 {
-  if (var_infra1==1)
+  if ((var_infra1==1) && (var_infra2==1))
   {
     ciclo();
   }
   else
   {
-    alto();
+    protocol();
   } 
 }
 
