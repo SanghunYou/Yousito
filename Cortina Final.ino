@@ -17,7 +17,7 @@ int infra1= 8;
 int infra2= 9;
 
 //Pin de usuario
-int usuario=10;
+int usuario=11;
 
 //Pin de pantalla
 
@@ -63,8 +63,8 @@ void setup() {
 
   //Establece la interrupción para el sensor con la siguiente sintaxis:
   //attachInterrupt(digitalPinToInterrupt(pin_del_sensor), función_que_debe_hacer, RISING);
-  attachInterrupt(digitalPinToInterrupt(infra1), protocol, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(infra2), protocol, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(infra1), protocol, FALLING);
+  attachInterrupt(digitalPinToInterrupt(infra2), protocol, FALLING);
 
   //Establece los pines del motor como salida
   pinMode(in1, OUTPUT);
@@ -120,12 +120,12 @@ int usu_ario()
   //Implementa un condicional para leer el tipo de usuario
   if(var_usuario == 0)
   {
-    Serial.println("Modo Supervisor");
+    //Serial.println("Modo Supervisor");
     return 0;
   }
   else if(var_usuario== 1)
   {
-    Serial.println("Modo Operador");
+    //Serial.println("Modo Operador");
     return 1;
   }
   else
@@ -141,6 +141,7 @@ int usu_ario()
 void manual()
 {
   Serial.println("Modo Manual");
+  delay(1000);
 
   //lee los pines para subir y bajar la cortina
   var_sube=digitalRead(sube);
@@ -175,6 +176,7 @@ void manual()
 void automatico()
 {
   Serial.println("Modo Automatico");
+  delay(1000);
 
   if (var_paro1==1 && cambio1==1)
   {
@@ -211,8 +213,6 @@ void automatico()
 //////////////////////////////////Modo operador//////////////////////////////////
 void modo_operador()
 {
-  Serial.println("Modo Operador");
-  delay(1000);
   //Leer los botones de manual y automático
   var_autom = digitalRead(autom);
 
@@ -231,8 +231,6 @@ void modo_operador()
 //////////////////////////////////Modo supervisor//////////////////////////////////
 void modo_supervisor()
 {
-  Serial.println("Modo Operador");
-  delay(1000);
   Serial.print("Numero de alarmas: ");
   delay(1000);
   Serial.println(alarma);
@@ -247,16 +245,20 @@ void loop() {
 
   tipo_usuario = usu_ario();
   //Serial.print("Tipo de usuario: ");
-  //Serial.println(variable_tipo_usuario);
+  //Serial.println(tipo_usuario);
 
   //Crear un condicional para seleccionar operador o supervisor
-  if(tipo_usuario == 0)
+  if(tipo_usuario == 1)
   {
+    Serial.println("Modo Supervisor");
+    delay(1000);
     modo_supervisor();
   }
-  else if(tipo_usuario == 1)
+  else if(tipo_usuario == 0)
   {
-    modo_operador();
+    Serial.println("Modo Operador");
+    delay(1000);
+    //modo_operador();
   }
 
 }
