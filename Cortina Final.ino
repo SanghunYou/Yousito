@@ -1,20 +1,27 @@
+//////////////////////////////////Pantalla//////////////////////////////////
+#include <SPI.h>
+#include <Wire.h>
+#include <Adafruit_SSD1306.h>
+#include <splash.h>
+#define OLED_RESET 4
+Adafruit_SSD1306 display (OLED_RESET);
 //////////////////////////////////Pines//////////////////////////////////
 //Pines para el motor
 int in1 = 1;   
-int in2 = 2;
+int in2 = 4;
 
 //Pines de los botones
-int sube= 3;  //subida
-int baja= 4;  //bajada
-int autom=5; //automatico
+int sube= 5;  //subida
+int baja= 6;  //bajada
+int autom=7; //automatico
 
 //Pin del fin de carrera
-int paro1=6;
-int paro2=7;
+int paro1=8;
+int paro2=9;
 
 //Pin de los infrarrojo
-int infra1= 8;
-int infra2= 9;
+int infra1= 2;
+int infra2= 3;
 
 //Pin de usuario
 int usuario=11;
@@ -63,8 +70,8 @@ void setup() {
 
   //Establece la interrupción para el sensor con la siguiente sintaxis:
   //attachInterrupt(digitalPinToInterrupt(pin_del_sensor), función_que_debe_hacer, RISING);
-  attachInterrupt(digitalPinToInterrupt(infra1), protocol, FALLING);
-  attachInterrupt(digitalPinToInterrupt(infra2), protocol, FALLING);
+  //attachInterrupt(digitalPinToInterrupt(infra1), protocol, FALLING);
+  //attachInterrupt(digitalPinToInterrupt(infra2), protocol, FALLING);
 
   //Establece los pines del motor como salida
   pinMode(in1, OUTPUT);
@@ -83,7 +90,6 @@ void protocol()
   delay(300);
   if (protocolo==1)
     {
-      alarma=alarma+1;
       delay(7000);
       Serial.println("OBJETO DETECTADO");
       delay(1000);
@@ -91,6 +97,7 @@ void protocol()
       delay(1000);
       protocolo=0;
       cambio1=1;
+      alarma=alarma+1;
     }
   else if (var_paro1==1 && cambio1==1)
     {
@@ -180,6 +187,7 @@ void automatico()
 
   if (var_paro1==1 && cambio1==1)
   {
+    //Sube
     digitalWrite(in1, LOW);
     digitalWrite(in2, HIGH);
     delay(300);
@@ -189,6 +197,7 @@ void automatico()
     cambio1=0;
     cambio2=1;
     delay(500);
+    //Baja
     digitalWrite(in1, HIGH);
     digitalWrite(in2, LOW);
     delay(300);
@@ -235,7 +244,17 @@ void modo_supervisor()
   delay(1000);
   Serial.println(alarma);
   delay(1000);
-  modo_operador();
+  //Pantalla
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setTextColor(WHITE);
+  display.setCursor(0,0);
+  display.println("Alarmas:");
+  display.display();
+  display.println(alarma);
+  display.display();
+  //modo_operador();
 }
 
 //////////////////////////////////void loop//////////////////////////////////
@@ -252,6 +271,19 @@ void loop() {
   {
     Serial.println("Modo Supervisor");
     delay(1000);
+    //Display
+    display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+    display.clearDisplay();
+    display.setTextSize(2);
+    display.setTextColor(WHITE);
+    display.setCursor(0,0);
+    display.println("Modo");
+    display.display();
+    delay(500);
+    display.println("Supervisor");
+    display.display();
+    delay(500);
+
     modo_supervisor();
   }
   else if(tipo_usuario == 0)
